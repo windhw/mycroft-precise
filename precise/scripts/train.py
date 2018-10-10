@@ -23,7 +23,7 @@ from precise.model import create_model, ModelParams
 from precise.params import inject_params, save_params
 from precise.train_data import TrainData
 from precise.util import calc_sample_hash
-
+import numpy as np
 
 class Trainer:
     usage = '''
@@ -131,7 +131,15 @@ class Trainer:
     def load_data(args: Any) -> Tuple[tuple, tuple]:
         data = TrainData.from_both(args.tags_file, args.tags_folder, args.folder)
         print('Data:', data)
-        train, test = data.load(True, not args.no_validation)
+
+        if isfile('DATA_CACHE.npz'):
+            data = np.load('DATA_CACHE.npz')
+            train = (data['train_inputs'], data['train_outputs'])
+            test = (data['test_inputs'], data['test_outputs'])
+        else:
+            train, test = data.load(True, not args.no_validation)
+            np.savez('DATA_CACHE.npz', train_inputs=train[0], train_outputs=train[1],
+                     test_inputs=test[0], test_outputs=test[1])
 
         print('Inputs shape:', train[0].shape)
         print('Outputs shape:', train[1].shape)
