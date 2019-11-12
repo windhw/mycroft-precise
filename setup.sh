@@ -27,7 +27,7 @@ install_piwheels() {
     echo "
 [global]
 extra-index-url=https://www.piwheels.org/simple
-" | sudo tee -a /etc/pip.conf
+" | tee -a /etc/pip.conf
 }
 
 #############################################
@@ -40,7 +40,7 @@ os=$(uname -s)
 if [ "$os" = "Linux" ]; then
     if is_command apt-get; then
         wait_for_apt
-        sudo apt-get install -y python3-pip curl libopenblas-dev python3-scipy cython libhdf5-dev python3-h5py portaudio19-dev swig libpulse-dev libatlas-base-dev
+        apt-get install -y python3-pip curl libopenblas-dev python3-scipy cython libhdf5-dev python3-h5py portaudio19-dev swig libpulse-dev libatlas-base-dev
     fi
 elif [ "$os" = "Darwin" ]; then
     if is_command brew; then

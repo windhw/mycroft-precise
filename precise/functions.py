@@ -33,7 +33,7 @@ def weighted_log_loss(yt, yp) -> Any:
     yt: Target
     yp: Prediction
     """
-    from keras import backend as K
+    from tensorflow.keras import backend as K
 
     pos_loss = -(0 + yt) * K.log(0 + yp + K.epsilon())
     neg_loss = -(1 - yt) * K.log(1 - yp + K.epsilon())

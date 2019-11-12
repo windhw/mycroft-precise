@@ -49,7 +49,7 @@ class ConvertScript(BaseScript):
 
         import tensorflow as tf
         from precise.model import load_precise_model
-        from keras import backend as K
+        from tensorflow.keras import backend as K
 
         out_dir, filename = split(out_file)
         out_dir = out_dir or '.'

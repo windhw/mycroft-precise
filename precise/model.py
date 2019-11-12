@@ -19,7 +19,7 @@ from precise.functions import load_keras, false_pos, false_neg, weighted_log_los
 from precise.params import inject_params, pr
 
 if TYPE_CHECKING:
-    from keras.models import Sequential
+    from tensorflow.keras.models import Sequential
 
 
 @attr.s()
@@ -63,13 +63,12 @@ def create_model(model_name: Optional[str], params: ModelParams) -> 'Sequential'
         print('Loading from ' + model_name + '...')
         model = load_precise_model(model_name)
     else:
-        from keras.layers.core import Dense
-        from keras.layers.recurrent import GRU
-        from keras.models import Sequential
+        from tensorflow.keras.layers import Dense, GRU
+        from tensorflow.keras.models import Sequential
 
         model = Sequential()
         model.add(GRU(
-            params.recurrent_units, activation='linear',
+            params.recurrent_units, activation='linear',unroll=True,
             input_shape=(pr.n_features, pr.feature_size), dropout=params.dropout, name='net'
         ))
         model.add(Dense(1, activation='sigmoid'))
@@ -80,4 +79,6 @@ def create_model(model_name: Optional[str], params: ModelParams) -> 'Sequential'
     for i in model.layers[:params.freeze_till]:
         i.trainable = False
     model.compile('rmsprop', weighted_log_loss, metrics=(not params.skip_acc) * metrics)
+    for w in model.get_weights():
+        print(w.shape)
     return model
