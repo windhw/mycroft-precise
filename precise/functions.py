@@ -42,7 +42,7 @@ def weighted_log_loss(yt, yp) -> Any:
 
 
 def weighted_mse_loss(yt, yp) -> Any:
-    from keras import backend as K
+    from tensorflow.keras import backend as K
 
     total = K.sum(K.ones_like(yt))
     neg_loss = total * K.sum(K.square(yp * (1 - yt))) / K.sum(1 - yt)
@@ -52,17 +52,17 @@ def weighted_mse_loss(yt, yp) -> Any:
 
 
 def false_pos(yt, yp) -> Any:
-    from keras import backend as K
+    from tensorflow.keras import backend as K
     return K.sum(K.cast(yp * (1 - yt) > 0.5, 'float')) / K.maximum(1.0, K.sum(1 - yt))
 
 
 def false_neg(yt, yp) -> Any:
-    from keras import backend as K
+    from tensorflow.keras import backend as K
     return K.sum(K.cast((1 - yp) * (0 + yt) > 0.5, 'float')) / K.maximum(1.0, K.sum(0 + yt))
 
 
 def load_keras() -> Any:
-    import keras
+    from tensorflow import keras
     keras.losses.weighted_log_loss = weighted_log_loss
     keras.metrics.false_pos = false_pos
     keras.metrics.false_positives = false_pos

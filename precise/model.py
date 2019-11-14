@@ -18,6 +18,13 @@ from typing import *
 from precise.functions import load_keras, false_pos, false_neg, weighted_log_loss, set_loss_bias
 from precise.params import inject_params, pr
 
+custom_map = {
+    "weighted_log_loss" : weighted_log_loss,
+    "false_pos" : false_pos,
+    "false_positives ": false_pos,
+    "false_neg" : false_neg }
+
+
 if TYPE_CHECKING:
     from tensorflow.keras.models import Sequential
 
@@ -45,7 +52,8 @@ def load_precise_model(model_name: str) -> Any:
         print('Warning: Unknown model type, ', model_name)
 
     inject_params(model_name)
-    return load_keras().models.load_model(model_name)
+    return load_keras().models.load_model(model_name, custom_map)
+
 
 
 def create_model(model_name: Optional[str], params: ModelParams) -> 'Sequential':
