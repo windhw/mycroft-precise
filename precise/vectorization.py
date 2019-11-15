@@ -19,6 +19,7 @@ from typing import *
 from precise.params import pr, Vectorizer
 from precise.util import load_audio, InvalidAudio
 from sonopy import mfcc_spec, mel_spec
+from precise.tflite_audio import tflite_mfccs
 
 inhibit_t = 0.4
 inhibit_dist_t = 1.0
@@ -35,6 +36,9 @@ vectorizers = {
     ),
     Vectorizer.speechpy_mfccs: lambda x: __import__('speechpy').feature.mfcc(
         x, pr.sample_rate, pr.window_t, pr.hop_t, pr.n_mfcc, pr.n_filt, pr.n_fft
+    ),
+    Vectorizer.tflite_mfccs: lambda x: tflite_mfccs(
+        x, os.path.join(os.path.dirname(os.path.abspath(__file__)), "audio.tflite")
     )
 }
 

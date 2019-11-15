@@ -60,7 +60,8 @@ class ListenerParams:
         num_features = {
             Vectorizer.mfccs: self.n_mfcc,
             Vectorizer.mels: self.n_filt,
-            Vectorizer.speechpy_mfccs: self.n_mfcc
+            Vectorizer.speechpy_mfccs: self.n_mfcc,
+            Vectorizer.tflite_mfccs: self.n_mfcc
         }[self.vectorizer]
         if self.use_delta:
             num_features *= 2
@@ -80,13 +81,14 @@ class Vectorizer:
     mels = 1
     mfccs = 2
     speechpy_mfccs = 3
+    tflite_mfccs = 4
 
 
 # Global listener parameters
 pr = ListenerParams(
     window_t=0.1, hop_t=0.05, buffer_t=1.5, sample_rate=16000,
     sample_depth=2, n_mfcc=13, n_filt=20, n_fft=512, use_delta=False,
-    threshold_config=((6, 4),), threshold_center=0.2, vectorizer=Vectorizer.mfccs
+    threshold_config=((6, 4),), threshold_center=0.2, vectorizer=Vectorizer.tflite_mfccs
 )
 
 # Used to fill in old param files without new attributes

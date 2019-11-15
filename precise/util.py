@@ -58,7 +58,8 @@ def load_audio(file: Any) -> np.ndarray:
         #raise InvalidAudio('Unsupported sample rate: ' + str(wav.rate))
 
     data = np.squeeze(wav.data)
-    data = data.reshape((-1))
+    if data.ndim > 1:
+        data = data[:,0]
     return data.astype(np.float32) / float(np.iinfo(data.dtype).max)
 
 
