@@ -1,10 +1,23 @@
 import tensorflow as tf
 from tensorflow.core.framework import attr_value_pb2
 import numpy as np
+from precise.params import pr
+from math import floor
 
 
 def tflite_mfccs(samples, tflitemodel_path ):
     samples = np.expand_dims(samples, 1)
+
+    real_features  =  1 + int(floor((samples.shape[0] - pr.window_samples) / pr.hop_samples))
+    need_cut = pr.n_features - real_features;
+    print(real_features,need_cut,pr.n_features)
+
+
+    if samples.shape[0] < pr.buffer_samples:
+        samples = np.concatenate([
+               samples,
+               np.zeros((pr.buffer_samples - samples.shape[0], samples.shape[1]), dtype=np.float32)
+           ])
     interpreter = tf.lite.Interpreter(model_path=tflitemodel_path)
     interpreter.allocate_tensors()
 
@@ -25,4 +38,6 @@ def tflite_mfccs(samples, tflitemodel_path ):
     # Use `tensor()` in order to get a pointer to the tensor.
     output_data = interpreter.get_tensor(output_details[0]['index'])
     output_data = output_data[0]
+    if need_cut > 0:
+        output_data = output_data[:-need_cut,:]
     return output_data
