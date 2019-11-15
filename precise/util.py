@@ -39,6 +39,7 @@ def audio_to_buffer(audio: np.ndarray) -> bytes:
 
 
 def load_audio(file: Any) -> np.ndarray:
+    print("[HW_DEBUG] Loading:"+ file)
     """
     Args:
         file: Audio filename or file object

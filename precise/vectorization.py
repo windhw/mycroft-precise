@@ -14,6 +14,7 @@
 import hashlib
 import numpy as np
 import os
+import sys
 from typing import *
 
 from precise.params import pr, Vectorizer
@@ -59,24 +60,27 @@ def add_deltas(features: np.ndarray) -> np.ndarray:
 
 
 def vectorize(audio: np.ndarray) -> np.ndarray:
-    """
-    Args:
-        audio: Audio verified to be of `sample_rate`
+    try:
+       """
+       Args:
+           audio: Audio verified to be of `sample_rate`
 
-    Returns:
-        array<float>: Vector representation of audio
-    """
-    if len(audio) > pr.max_samples:
-        audio = audio[-pr.max_samples:]
-    features = vectorize_raw(audio)
-    if len(features) < pr.n_features:
-        features = np.concatenate([
-            np.zeros((pr.n_features - len(features), features.shape[1])),
-            features
-        ])
-    if len(features) > pr.n_features:
-        features = features[-pr.n_features:]
-
+       Returns:
+           array<float>: Vector representation of audio
+       """
+       if len(audio) > pr.max_samples:
+           audio = audio[-pr.max_samples:]
+       features = vectorize_raw(audio)
+       if len(features) < pr.n_features:
+           features = np.concatenate([
+               np.zeros((pr.n_features - len(features), features.shape[1])),
+               features
+           ])
+       if len(features) > pr.n_features:
+           features = features[-pr.n_features:]
+    except Exception as e:
+        print("[HW_DEBUG]:Exception is:" + str(e) )
+        sys.exit(1)
     return features
 
 
