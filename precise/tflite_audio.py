@@ -6,6 +6,7 @@ from math import floor
 
 
 def tflite_mfccs(samples, tflitemodel_path ):
+    samples = samples.astype(np.float32)
     samples = np.expand_dims(samples, 1)
 
     real_features  =  1 + int(floor((samples.shape[0] - pr.window_samples) / pr.hop_samples))
