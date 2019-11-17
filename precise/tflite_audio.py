@@ -9,10 +9,12 @@ def tflite_mfccs(samples, tflitemodel_path ):
     samples = samples.astype(np.float32)
     samples = np.expand_dims(samples, 1)
 
+    if samples.shape[0] > pr.buffer_samples:
+        samples = samples[-pr.buffer_samples:,:]
+
     real_features  =  1 + int(floor((samples.shape[0] - pr.window_samples) / pr.hop_samples))
     need_cut = pr.n_features - real_features;
     print(real_features,need_cut,pr.n_features)
-
 
     if samples.shape[0] < pr.buffer_samples:
         samples = np.concatenate([
